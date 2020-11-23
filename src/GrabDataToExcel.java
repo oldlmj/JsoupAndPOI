@@ -73,7 +73,7 @@ public class GrabDataToExcel {
 		String fileName = "test_ws_data.xlsx";
 
 		/*
-		 * 尚未指定檔案路徑，檔案建立在本執行專案內 儲存工作簿
+		 * 未指定檔案路徑，檔案建立在本執行專案內 儲存工作簿
 		 */
 		try {
 			FileOutputStream os = new FileOutputStream(fileName);

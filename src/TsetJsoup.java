@@ -46,12 +46,14 @@ public class TsetJsoup {
 	 * - 新增 GrabDataToExcel.java，製造商品資料 Excel,
 	 * ****** 201122
 	 * - 雛型完成
-	 * 
+	 * - 發現商品名稱在 url 上，英文會轉小寫及去掉特殊符號，且只記錄商品名稱初始值，若商品名稱有更改，
+	 * ****** 201123
+	 * - 解決商品名稱轉成小寫以及去掉特殊符號
 	 * __________________________________________________________
 	 * 
 	 * # 問題
-	 * Q.商品名稱有英文或特殊符號時，jsoup 所使用 url 字串有問題，無法找到正確商品網址
-	 * A.發現遇到英文一律小寫，而特殊符號是去掉。因此將字串轉換成小寫，用正則表達式取代特殊符號。
+	 * Q.商品名稱有英文或特殊符號時，jsoup 所使用 url 字串有問題，無法連到商品網址
+	 * A.發現在 url 上，英文一律小寫，而特殊符號是去掉。因此將字串轉換成小寫，用正則表達式取代特殊符號。
 	 * 
 	 * @throws IOException
 	 * @throws FileNotFoundException
@@ -85,7 +87,6 @@ public class TsetJsoup {
 				Elements elUrlItem = elpostItem.getElementsByTag("img");
 				// 依據 Shopline 規則，若要放多個圖片連結，在連結後面再放個半行空白即可
 				strTmp = strTmp + elUrlItem.attr("src") + "　";
-
 			}
 			// 把 strTmp 放進字串陣列
 			strData[1] = strTmp;			
@@ -110,7 +111,7 @@ public class TsetJsoup {
 				XSSFRow row = sheet.getRow(i);					
 				
 				try {
-					// 在第2行依序讀取儲存格，依序放進 getData( String str ) 提供爬蟲捕抓的目標 
+					// 在第2行依序讀取儲存格，依序放進 getData( String str ) 提供爬蟲捕抓的目標，並強制轉成小寫
 					str = getData(row.getCell(1).getStringCellValue().toLowerCase());                                    
                 } catch (NullPointerException e) {
                     //如果儲存格為空，就跳過此次
@@ -137,7 +138,7 @@ public class TsetJsoup {
 		} catch (IOException e) {
 			System.err.println("OOPS!! 檔案處理出問題了~" + e.toString());
 		} catch (Exception e) {
-			System.err.println("OOPS!!問題可不小..." + e.toString());
+			System.err.println("OOPS!!此問題未知..." + e.toString());
 		}
 
 	}
