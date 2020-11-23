@@ -28,37 +28,46 @@ import org.jsoup.select.Elements;
 
 public class TsetJsoup {
 	/**
-	 * Jsoup 爬蟲 因原本的不見，所以重做一份
-	 * - 說明
+	 * Jsoup 爬蟲 因先前的不見，所以重做一份
+	 * # 說明
 	 * 1.依據該 Excel 裡的所有商品來爬取所需資訊
 	 * 2.而所需資訊為:商品描述、在"了解更多"下方全部圖片的 url
 	 * 3.再回寫到該 Excel 指定欄位裡。
 	 * 
-	 * - 使用 Jsoup、Apache POI。
+	 * # 使用 Jsoup、Apache POI。
 	 * 
-	 * log 
-	 * ***** 201118
+	 * # log 
+	 * ****** 201118
 	 * - 已抓到商品描述
-	 * ***** 201119
+	 * ****** 201119
 	 * - 已抓到圖片的src 
 	 * - 可讀寫 Excel 檔案內容 
 	 * ****** 201120
 	 * - 新增 GrabDataToExcel.java，製造商品資料 Excel,
+	 * ****** 201122
+	 * - 雛型完成
+	 * 
+	 * __________________________________________________________
+	 * 
+	 * # 問題
+	 * Q.商品名稱有英文或特殊符號時，jsoup 所使用 url 字串有問題，無法找到正確商品網址
+	 * A.發現遇到英文一律小寫，而特殊符號是去掉。因此將字串轉換成小寫，用正則表達式取代特殊符號。
 	 * 
 	 * @throws IOException
 	 * @throws FileNotFoundException
 	 * 
 	 */
 
-	// static String[] strData = new String[2];
 
 	public static String[] getData(String str) {
-		String strUrl = "https://www.woodstuck.com.tw/products/" + str;
-		String strTmp = "";
-		System.out.println(strUrl + "----");
+		String strTmp = "",strRepex="[^[\\uD83D\\uDD25|(][現貨+預購]|[預購][)|\\uD83D\\uDD25]]";
+		strTmp=str.replaceAll(strRepex, "");
+		System.out.println("strTmp="+strTmp);
+		String strUrl = "https://www.woodstuck.com.tw/products/" + strTmp;		
+		System.out.println("--  "+strUrl );
 		String[] strData = new String[2]; //放置爬蟲捕獲的資料
 		try {
-
+			strTmp = "";
 			Document doc = Jsoup.connect(strUrl).timeout(30000).validateTLSCertificates(false).get();
 			// ## 取得商品描述
 			Elements el = doc.select("p.MsoNormal");
@@ -66,7 +75,7 @@ public class TsetJsoup {
 				// 因 Shopline 的系統可接受HTML語法，因此在每一行加入<br>來換行
 				strTmp = strTmp + postItem.text() + "<br>";
 			}
-
+			// 把 strTmp 放進字串陣列
 			strData[0] = strTmp;			
 			strTmp = "";
 			
@@ -98,21 +107,22 @@ public class TsetJsoup {
 			
 			for (int i = 1; i <= sheet.getLastRowNum(); i++) {
 				// 得到列
-				XSSFRow row = sheet.getRow(i);				
-				// 在第2行依序讀取儲存格，依序放進 getData( String str ) 提供爬蟲捕抓的目標 
+				XSSFRow row = sheet.getRow(i);					
 				
 				try {
-					str = getData(row.getCell(1).getStringCellValue());                                    
+					// 在第2行依序讀取儲存格，依序放進 getData( String str ) 提供爬蟲捕抓的目標 
+					str = getData(row.getCell(1).getStringCellValue().toLowerCase());                                    
                 } catch (NullPointerException e) {
-                    //如果儲存格為空，就跳過此循環
+                    //如果儲存格為空，就跳過此次
                     continue;
                 }
+				sheet.autoSizeColumn(i);
 				// 依序選取指定的儲存格，並放置 str[] 的每個值
 				XSSFCell cell = row.createCell(3);
 				cell.setCellValue(str[0]);
 				cell = row.createCell(7);
-				cell.setCellValue(str[1]);
-			}
+				cell.setCellValue(str[1]);				
+			}			
 			input.close(); // 輸入串流關閉
 			FileOutputStream out = new FileOutputStream(fileName); // 輸出串流
 			book.write(out);
@@ -123,9 +133,9 @@ public class TsetJsoup {
 			book.close(); // 關閉活頁簿
 			System.out.println(fileName + " excel export finish. -------------");
 		} catch (FileNotFoundException e) {
-			System.err.println("OOPS! 檔案不存在~!" + e.toString());
+			System.err.println("OOPS!! 檔案不存在或是檔案被使用中~" + e.toString());
 		} catch (IOException e) {
-			System.err.println("OOPS! 檔案處理出問題了~!" + e.toString());
+			System.err.println("OOPS!! 檔案處理出問題了~" + e.toString());
 		} catch (Exception e) {
 			System.err.println("OOPS!!問題可不小..." + e.toString());
 		}

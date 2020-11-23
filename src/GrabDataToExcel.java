@@ -28,52 +28,52 @@ import org.jsoup.select.Elements;
 
 public class GrabDataToExcel {
 	/**
-	 * «e¨¥: ¦]­ì¥»ªºª¦ÂÎ±M®×¨S³Æ¥÷¨ì¡A­n­«°µ¤@¥÷¡C
+	 * å‰è¨€: å› åŸæœ¬çš„çˆ¬èŸ²å°ˆæ¡ˆæ²’å‚™ä»½åˆ°ï¼Œè¦é‡åšä¸€ä»½ã€‚
 	 * 
-	 * »¡©ú: ·í®É·s¼Wªº°Ó«~¡A´X¥G§¹°â³Q¤U¬[¡A ¨Ï±oµLªk¨Ï¥Î·í®É©Ò¥Î°Ó«~¸ê®ÆªºExcelÀÉ¶i¦æª¦ÂÎ°Ê§@¡A ¦]¦¹­n°µ­Ó¤pª¦ÂÎ¡A¥u§ì­Ó°Ó«~¦WºÙ¡A¨Ã¼g¤JExcel¡A
-	 * ¨Ó¨ú¥N­ì¥»°Ó«~¸ê®ÆªºExcel¡C
+	 * èªªæ˜: ç•¶æ™‚æ–°å¢çš„å•†å“ï¼Œå¹¾ä¹å®Œå”®è¢«ä¸‹æ¶ï¼Œ ä½¿å¾—ç„¡æ³•ä½¿ç”¨ç•¶æ™‚æ‰€ç”¨å•†å“è³‡æ–™çš„Excelæª”é€²è¡Œçˆ¬èŸ²å‹•ä½œï¼Œ å› æ­¤è¦åšå€‹å°çˆ¬èŸ²ï¼ŒåªæŠ“å€‹å•†å“åç¨±ï¼Œä¸¦å¯«å…¥Excelï¼Œ
+	 * ä¾†å–ä»£åŸæœ¬å•†å“è³‡æ–™çš„Excelã€‚
 	 * 
 	 */
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		writeExcel();
 	}
 
-	// Åª¨ú Excel ¤º®e
+	// è®€å– Excel å…§å®¹
 	public static void writeExcel() throws FileNotFoundException, IOException {
 		@SuppressWarnings("resource")
-		// ·s«Ø¤u§@Ã¯
+		// æ–°å»ºå·¥ä½œç°¿
 		XSSFWorkbook book = new XSSFWorkbook();
-		// «Ø¥ß¤u§@ªí
+		// å»ºç«‹å·¥ä½œè¡¨
 		XSSFSheet sheet = book.createSheet("data");
 
-		String[] buffer = { "°Ó«~½s¸¹", "°Ó«~¦WºÙ(¤¤¤å)", "°Ó«~¦WºÙ (­^¤å)", "°Ó«~´y­z(¤¤¤å)", "°Ó«~´y­z (­^¤å)", "SEO¼ĞÃD(¤¤¤å)", "SEO¼ĞÃD(­^¤å)", "°Ó«~¬Û¤ù",
-				"§ó¦h¬Û¤ù", "¿ï¶µ³f¸¹" };
+		String[] buffer = { "å•†å“ç·¨è™Ÿ", "å•†å“åç¨±(ä¸­æ–‡)", "å•†å“åç¨± (è‹±æ–‡)", "å•†å“æè¿°(ä¸­æ–‡)", "å•†å“æè¿° (è‹±æ–‡)", "SEOæ¨™é¡Œ(ä¸­æ–‡)", "SEOæ¨™é¡Œ(è‹±æ–‡)", "å•†å“ç›¸ç‰‡",
+				"æ›´å¤šç›¸ç‰‡", "é¸é …è²¨è™Ÿ" };
 
 		int rowIdx = 0;
 		int colIdx = -1;
 
-		// ¥ı±N String[] buffer ¨Ì§Ç¼g¤J Excel ªº²Ä1¦C¬°¼ĞÃD¦C
-		XSSFRow row = sheet.createRow(0); // «Ø¥ß¦æ
+		// å…ˆå°‡ String[] buffer ä¾åºå¯«å…¥ Excel çš„ç¬¬1åˆ—ç‚ºæ¨™é¡Œåˆ—
+		XSSFRow row = sheet.createRow(0); // å»ºç«‹è¡Œ
 		XSSFCell cell = row.createCell(1);
 		for (String arrs : buffer) {
 			cell = row.createCell(++colIdx);
 			cell.setCellValue(arrs);
 			
 		}
-		// ±q getData() ¦^¶Çªº¦r¦ê°}¦C¡A¦b Excel ªº(B,2)¶}©l¨Ì§Ç««ª½¼g¤J
+		// å¾ getData() å›å‚³çš„å­—ä¸²é™£åˆ—ï¼Œåœ¨ Excel çš„(B,2)é–‹å§‹ä¾åºå‚ç›´å¯«å…¥
 		String[] strData = getData();
 		for (String arrs : strData) {
 			row = sheet.createRow(++rowIdx);
 			cell = row.createCell(1);
 			cell.setCellValue(arrs);
-			sheet.autoSizeColumn(rowIdx); // ¦Û°Ê½Õ¾ãÄæ¦ì¼e«×
+			sheet.autoSizeColumn(rowIdx); // è‡ªå‹•èª¿æ•´æ¬„ä½å¯¬åº¦
 		}
 		
-		// «ü©wÀÉ®×¦WºÙ
+		// æŒ‡å®šæª”æ¡ˆåç¨±
 		String fileName = "test_ws_data.xlsx";
 
 		/*
-		 * ©|¥¼«ü©wÀÉ®×¸ô®|¡AÀÉ®×«Ø¥ß¦b¥»°õ¦æ±M®×¤º Àx¦s¤u§@Ã¯
+		 * å°šæœªæŒ‡å®šæª”æ¡ˆè·¯å¾‘ï¼Œæª”æ¡ˆå»ºç«‹åœ¨æœ¬åŸ·è¡Œå°ˆæ¡ˆå…§ å„²å­˜å·¥ä½œç°¿
 		 */
 		try {
 			FileOutputStream os = new FileOutputStream(fileName);
@@ -86,7 +86,7 @@ public class GrabDataToExcel {
 
 	}
 
-	// ¨Ï¥Î Jsoup ª¦¨ú°Ó«~¦WºÙ
+	// ä½¿ç”¨ Jsoup çˆ¬å–å•†å“åç¨±
 	public static String[] getData() {
 		String strUrl = "https://www.woodstuck.com.tw/categories/%E5%A4%96%E5%A5%97-1";
 		String str = null;
@@ -94,7 +94,7 @@ public class GrabDataToExcel {
 			Document doc = Jsoup.connect(strUrl).timeout(30000).validateTLSCertificates(false).get();
 
 			Elements el1 = doc.select("ul.boxify-container");
-			// ## ¨ú±o¸Ó­¶­±©Ò¦³°Ó«~¦WºÙ
+			// ## å–å¾—è©²é é¢æ‰€æœ‰å•†å“åç¨±
 			for (Element postItem : el1) {
 				Elements el = postItem.select("div.title");
 				str = el.text();
@@ -103,7 +103,7 @@ public class GrabDataToExcel {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		// str ªº¤º®e¬O"°Ó«~¦WºÙ"+" "ªº¤@ª½³sÄò©Êªº¦r¦ê¡A¦]¦¹­n°µ¤Á³Î¡A¨Ã©ñ¶i String[] data ¸Ì
+		// str çš„å…§å®¹æ˜¯"å•†å“åç¨±"+" "çš„ä¸€ç›´é€£çºŒæ€§çš„å­—ä¸²ï¼Œå› æ­¤è¦åšåˆ‡å‰²ï¼Œä¸¦æ”¾é€² String[] data è£¡
 		String[] data = str.split(" ");
 		return data;
 	}
