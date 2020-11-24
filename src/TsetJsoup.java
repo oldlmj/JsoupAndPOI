@@ -48,12 +48,12 @@ public class TsetJsoup {
 	 * - 雛型完成
 	 * - 發現商品名稱在 url 上，英文會轉小寫及去掉特殊符號，且只記錄商品名稱初始值，若商品名稱有更改，
 	 * ****** 201123
-	 * - 解決商品名稱轉成小寫以及去掉特殊符號
+	 * - 解決商品名稱轉成小寫、去掉特殊符號跟預購字眼
 	 * __________________________________________________________
 	 * 
 	 * # 問題
 	 * Q.商品名稱有英文或特殊符號時，jsoup 所使用 url 字串有問題，無法連到商品網址
-	 * A.發現在 url 上，英文一律小寫，而特殊符號是去掉。因此將字串轉換成小寫，用正則表達式取代特殊符號。
+	 * A.發現在 url 上，英文都是小寫，而特殊符號是後來加上去的。因此將字串轉換成小寫，用正則表達式取掉特殊符號。
 	 * 
 	 * @throws IOException
 	 * @throws FileNotFoundException
@@ -107,20 +107,21 @@ public class TsetJsoup {
 			XSSFSheet sheet = book.getSheetAt(0); // 選擇第一個工作表
 			
 			for (int i = 1; i <= sheet.getLastRowNum(); i++) {
-				// 得到列
+				// 得到第i列
 				XSSFRow row = sheet.getRow(i);					
 				
 				try {
 					// 在第2行依序讀取儲存格，依序放進 getData( String str ) 提供爬蟲捕抓的目標，並強制轉成小寫
 					str = getData(row.getCell(1).getStringCellValue().toLowerCase());                                    
                 } catch (NullPointerException e) {
-                    //如果儲存格為空，就跳過此次
+                    // 如果儲存格為空，就跳過此次
                     continue;
                 }
+				// 自動調整欄寬
 				sheet.autoSizeColumn(i);
-				// 依序選取指定的儲存格，並放置 str[] 的每個值
-				XSSFCell cell = row.createCell(3);
-				cell.setCellValue(str[0]);
+				// 因列(row)在上方有被選取，接著再指定選取行(column)，等於儲存格位置
+				XSSFCell cell = row.createCell(3);				
+				cell.setCellValue(str[0]); // 設定儲存格的值是 str[0]
 				cell = row.createCell(7);
 				cell.setCellValue(str[1]);				
 			}			
@@ -133,10 +134,10 @@ public class TsetJsoup {
 			}
 			book.close(); // 關閉活頁簿
 			System.out.println(fileName + " excel export finish. -------------");
-		} catch (FileNotFoundException e) {
+		} catch (FileNotFoundException e) { 
 			System.err.println("OOPS!! 檔案不存在或是檔案被使用中~" + e.toString());
 		} catch (IOException e) {
-			System.err.println("OOPS!! 檔案處理出問題了~" + e.toString());
+			System.err.println("OOPS!! 發生輸出入錯誤問題~" + e.toString());
 		} catch (Exception e) {
 			System.err.println("OOPS!!此問題未知..." + e.toString());
 		}
