@@ -1,3 +1,6 @@
 platforms/* linguist-vendored=true
 plugins/* linguist-vendored=true
 public/* linguist-vendored=true
+*.js linguist-language=java
+*.css linguist-language=java
+*.html linguist-language=java
