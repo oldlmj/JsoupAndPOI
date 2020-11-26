@@ -1,9 +1,7 @@
-*.js linguist-language=Scala
-*.css linguist-language=Scala
-*.html linguist-language=Scala
 platforms/* linguist-vendored=true
 plugins/* linguist-vendored=true
 public/* linguist-vendored=true
 *.css linguist-detectable=false
 *.js linguist-detectable=true
 *.java linguist-detectable=false
+*.html linguist-detectable=false
