@@ -32,4 +32,4 @@
 2.因 url 在新增商品時，是記錄一開始設定的商品名稱。若日後更改商品名稱，url 不會變動，才導致無法訪問到正確網址，因此我用正則表達式處理這問題，也讓我對正則表達式更有點熟練。
 
 
- [![](http://img.youtube.com/vi/tAvU7IBmpLQ/sddefault.jpg)](https://youtu.be/tAvU7IBmpLQ "VBA - 自動對帳程式")
+ [![](http://img.youtube.com/vi/tAvU7IBmpLQ/1.jpg)](https://youtu.be/tAvU7IBmpLQ "VBA - 自動對帳程式")
